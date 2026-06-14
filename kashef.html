@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>کاشف 11 | اهدای کانفیگ به مهسا</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .header h1 { font-size: 2rem; background: linear-gradient(135deg, #38bdf8, #a78bfa); background-clip: text; -webkit-background-clip: text; color: transparent; margin-bottom: 10px; }
+        .stats-bar { display: flex; gap: 15px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }
+        .stat-card { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 10px 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .stat-number { font-size: 1.8rem; font-weight: bold; color: #38bdf8; }
+        .toolbar { display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+        button {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        button:hover { transform: translateY(-2px); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn-secondary { background: linear-gradient(135deg, #475569, #334155); }
+        .btn-mahsa { background: linear-gradient(135deg, #e11d48, #be123c); }
+        
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .source-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .source-card input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
+        .source-info {
+            flex: 1;
+        }
+        .source-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .source-url {
+            font-size: 0.6rem;
+            font-family: monospace;
+            color: #94a3b8;
+            word-break: break-all;
+        }
+        .source-status {
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+        .status-success { color: #34d399; }
+        .status-error { color: #f87171; }
+        .status-pending { color: #fbbf24; }
+        
+        .table-container {
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            margin-bottom: 40px;
+        }
+        .config-table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .config-cell {
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.7rem;
+            word-break: break-all;
+            max-width: 400px;
+        }
+        .small-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 2px;
+            white-space: nowrap;
+        }
+        .small-btn:hover { background: #3b82f6; color: white; }
+        
+        .filter-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .region-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .region-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .region-checkboxes input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
+        
+        .vip-section {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .vip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .vip-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .vip-controls label {
+            font-size: 0.8rem;
+        }
+        .vip-controls input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 6px 10px;
+            border-radius: 8px;
+            color: white;
+            width: 80px;
+        }
+        .vip-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .vip-item {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: monospace;
+            font-size: 0.7rem;
+            word-break: break-all;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .vip-ping {
+            background: #10b981;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        .vip-config {
+            flex: 1;
+            text-align: left;
+        }
+        .load-more-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 0.8rem;
+        }
+        .load-more-btn:hover { background: #475569; }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            z-index: 1000;
+        }
+        progress {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .badge {
+            background: #3b82f6;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .download-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .guide-box {
+            background: rgba(0,0,0,0.5);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-right: 4px solid #e11d48;
+        }
+        hr { border-color: #334155; margin: 20px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>کاشف 11 | اهدای کانفیگ به مهسا</h1>
+        <p>دریافت کانفیگ از ۹ منبع | فیلتر منطقه | VIP با پینگ هوشمند | خروجی آماده برای مهسا</p>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-card"><div class="stat-number" id="totalConfigs">0</div><div class="stat-label">کل کانفیگ‌ها</div></div>
+        <div class="stat-card"><div class="stat-number" id="vipCount">0</div><div class="stat-label">VIP منتخب</div></div>
+        <div class="stat-card"><div class="stat-number" id="lastUpdate">—</div><div class="stat-label">آخرین دریافت</div></div>
+    </div>
+
+    <div class="toolbar">
+        <button id="fetchSelectedBtn" class="btn-success">📥 دریافت منابع انتخاب شده</button>
+        <button id="selectAllBtn" class="btn-secondary">✅ انتخاب همه</button>
+        <button id="deselectAllBtn" class="btn-secondary">❌ لغو همه</button>
+        <button id="applyRegionBtn" class="btn-warning">🌍 اعمال فیلتر منطقه</button>
+        <button id="clearAllBtn" class="btn-danger">🗑️ پاک کردن داده‌ها</button>
+    </div>
+
+    <div class="source-grid" id="sourceGrid"></div>
+    <div id="progressContainer" style="display: none;">
+        <progress id="fetchProgress" value="0" max="100"></progress>
+        <div id="progressText" style="font-size:0.7rem; text-align:center;"></div>
+    </div>
+
+    <!-- راهنمای اهدا به مهسا -->
+    <div class="guide-box">
+        <h3>🔗 اهدای کانفیگ به مهسا (MahsaNG)</h3>
+        <p>۱. ابتدا از دکمه‌های زیر یک لینک سابسکریپشن بسازید.<br>
+        ۲. در برنامه مهسا، روی <strong>➕</strong> → <strong>Import from URL</strong> یا <strong>Add Subscription</strong> کلیک کنید.<br>
+        ۳. لینک کپی شده را وارد کرده و ذخیره کنید.<br>
+        ۴. مهسا به طور خودکار کانفیگ‌های به‌روز کاشف را دریافت می‌کند.</p>
+        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+            <button id="copySubscriptionForMahsa" class="btn-mahsa">🔗 کپی لینک سابسکریپشن (برای مهسا)</button>
+            <button id="copyVipForMahsa" class="btn-mahsa">⭐ کپی VIP (متن ساده)</button>
+        </div>
+    </div>
+
+    <!-- فیلتر چندمنطقه‌ای -->
+    <div class="filter-panel">
+        <div class="region-checkboxes">
+            <label><input type="checkbox" value="Asia" class="region-chk"> آسیا</label>
+            <label><input type="checkbox" value="Europe" class="region-chk"> اروپا</label>
+            <label><input type="checkbox" value="America" class="region-chk"> آمریکا</label>
+            <label><input type="checkbox" value="SouthAmerica" class="region-chk"> آمریکای جنوبی</label>
+            <label><input type="checkbox" value="Canada" class="region-chk"> کانادا</label>
+            <label><input type="checkbox" value="Australia" class="region-chk"> استرالیا</label>
+        </div>
+        <span class="badge">تعداد کانفیگ‌های فیلتر شده: <span id="filteredCount">0</span></span>
+    </div>
+
+    <!-- جدول اصلی -->
+    <div class="table-container">
+        <h3>📋 تمام کانفیگ‌ها (اسکرول)</h3>
+        <div style="margin-bottom: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button id="copyAllTableBtn" class="small-btn">📋 کپی همه (متن)</button>
+            <div class="download-group">
+                <span>📥 دانلود:</span>
+                <button id="downloadTxtBtn" class="small-btn">TXT</button>
+                <button id="downloadCsvBtn" class="small-btn">CSV</button>
+                <button id="downloadJsonBtn" class="small-btn">JSON</button>
+            </div>
+        </div>
+        <div class="config-table-wrapper" id="tableScrollContainer">
+            <table id="allConfigsTable">
+                <thead><tr><th>#</th><th>کانفیگ</th><th>منطقه</th><th>عملیات</th></tr></thead>
+                <tbody id="tableBody"><tr><td colspan="4">در حال بارگذاری...<\/td><\/tr><\/tbody>
+            <\/table>
+        <\/div>
+    <\/div>
+
+    <!-- بخش VIP -->
+    <div class="vip-section">
+        <div class="vip-header">
+            <h3>⭐ کانفیگ‌های VIP (بهترین پینگ)</h3>
+            <div class="vip-controls">
+                <label>⏱️ محدوده پینگ (ms):</label>
+                <input type="number" id="minPingVip" value="5" step="5" style="width:80px;"> تا
+                <input type="number" id="maxPingVip" value="300" step="10" style="width:80px;">
+                <label>📊 تعداد VIP:</label>
+                <input type="number" id="topCountVip" value="200" step="10" style="width:80px;">
+                <label>⏳ تأخیر بین پینگ‌ها (ms):</label>
+                <input type="number" id="delayVip" value="200" step="50" style="width:90px;">
+                <button id="applyVipFilterBtn" class="btn-warning">✨ اعمال فیلتر VIP (تست پینگ)</button>
+            </div>
+            <div>
+                <button id="copyVipBtn" class="small-btn">📋 کپی همه VIP</button>
+                <button id="downloadVipBtn" class="small-btn">💾 دانلود فایل VIP</button>
+            </div>
+        </div>
+        <div class="vip-status" style="margin-bottom: 10px;">
+            <span class="badge" id="vipTotalBadge">تعداد کل VIP: 0</span>
+            <span class="badge" id="vipLoadedBadge">نمایش داده شده: 0</span>
+        </div>
+        <div class="vip-list-container" id="vipScrollContainer">
+            <div id="vipListInner"><p style="text-align:center;">تنظیمات را انتخاب کرده و روی «اعمال فیلتر VIP» کلیک کنید...</p></div>
+        </div>
+        <button id="loadMoreVipBtn" class="load-more-btn" style="display: none;">🔽 نمایش بیشتر (۲۰ تای بعدی)</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const SOURCES = [
+            { id: "nexus", name: "🌍 Nexus-Nodes", url: "https://raw.githubusercontent.com/ninjastrikers/Nexus-nodes/main/configs/all.txt" },
+            { id: "freedom", name: "✨ Freedom-V2Ray", url: "https://raw.githubusercontent.com/MahanKenway/Freedom-V2Ray/main/configs/mix.txt" },
+            { id: "barryfar", name: "🚀 Barry-Far", url: "https://raw.githubusercontent.com/barry-far/V2ray-Config/main/All_Configs_Sub.txt" },
+            { id: "matin", name: "🔥 MatinGhanbari", url: "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/all_sub.txt" },
+            { id: "kolandone", name: "📚 Kolandone", url: "https://raw.githubusercontent.com/Kolandone/v2raycollector/main/config.txt" },
+            { id: "ebrasha", name: "💎 ebrasha", url: "https://raw.githubusercontent.com/ebrasha/free-v2ray-public-list/main/config.txt" },
+            { id: "mahdibland", name: "⚙️ MahdiBland", url: "https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/Eternity" },
+            { id: "peasoft", name: "🛡️ Peasoft", url: "https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt" },
+            { id: "ermaozi", name: "🎯 Ermaozi", url: "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt" }
+        ];
+
+        let rawContents = {}, allConfigs = [], filteredConfigs = [], vipResults = [];
+        let tableDisplayedCount = 0, vipDisplayedCount = 0;
+        let currentVipList = [];
+        const TABLE_BATCH = 20, VIP_BATCH = 20;
+        let tableScrollObserver = null;
+
+        function showToast(msg, isErr = false) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            t.style.backgroundColor = isErr ? '#ef4444' : '#10b981';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+        function formatBytes(b) {
+            if (b === 0) return '0 B';
+            const i = Math.floor(Math.log(b) / Math.log(1024));
+            return parseFloat((b / Math.pow(1024, i)).toFixed(2)) + ' ' + ['B','KB','MB'][i];
+        }
+        function updateStats() {
+            document.getElementById('totalConfigs').innerText = allConfigs.length;
+            document.getElementById('vipCount').innerText = vipResults.length;
+        }
+
+        // دریافت با پروکسی
+        async function fetchWithFallback(url) {
+            const proxies = [
+                async (u) => { const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(u)}`); return r.ok ? await r.text() : null; },
+                async (u) => { const r = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`); return r.ok ? await r.text() : null; },
+                async (u) => { const r = await fetch(`https://cors.eu.org/${encodeURIComponent(u)}`); return r.ok ? await r.text() : null; },
+                async (u) => { const r = await fetch(u); return r.ok ? await r.text() : null; }
+            ];
+            for (let i = 0; i < proxies.length; i++) {
+                try {
+                    const ctrl = new AbortController();
+                    const tid = setTimeout(() => ctrl.abort(), 12000);
+                    const text = await proxies[i](url);
+                    clearTimeout(tid);
+                    if (text && text.length > 100) return { success: true, content: text };
+                } catch(e) {}
+            }
+            return { success: false };
+        }
+
+        async function fetchSingleSource(source) {
+            const statusSpan = document.getElementById(`status_${source.id}`);
+            const countSpan = document.getElementById(`count_${source.id}`);
+            if (statusSpan) { statusSpan.innerHTML = "⏳ دریافت..."; statusSpan.className = "status-pending"; }
+            const result = await fetchWithFallback(source.url);
+            if (result.success) {
+                rawContents[source.id] = result.content;
+                const extracted = extractConfigsFromText(result.content);
+                if (statusSpan) { statusSpan.innerHTML = `✅ ${formatBytes(result.content.length)}`; statusSpan.className = "status-success"; }
+                if (countSpan) countSpan.innerText = `${extracted.length} کانفیگ`;
+                return true;
+            } else {
+                if (statusSpan) { statusSpan.innerHTML = "❌ خطا"; statusSpan.className = "status-error"; }
+                if (countSpan) countSpan.innerText = "0";
+                return false;
+            }
+        }
+
+        async function fetchSelectedSources() {
+            const selected = [];
+            for (const src of SOURCES) {
+                const cb = document.getElementById(`chk_${src.id}`);
+                if (cb && cb.checked) selected.push(src);
+            }
+            if (selected.length === 0) { showToast("هیچ منبعی انتخاب نشده", true); return; }
+            showToast(`🔄 شروع دریافت ${selected.length} منبع...`);
+            const progContainer = document.getElementById('progressContainer');
+            const progBar = document.getElementById('fetchProgress');
+            const progText = document.getElementById('progressText');
+            progContainer.style.display = 'block';
+            progBar.max = selected.length;
+            progBar.value = 0;
+            for (let i = 0; i < selected.length; i++) {
+                progBar.value = i;
+                progText.innerText = `در حال دریافت: ${selected[i].name} (${i+1}/${selected.length})`;
+                await fetchSingleSource(selected[i]);
+                await new Promise(r => setTimeout(r, 300));
+            }
+            progBar.value = selected.length;
+            progText.innerText = "دریافت کامل شد!";
+            setTimeout(() => { progContainer.style.display = 'none'; }, 2000);
+            await collectAllConfigs();
+            await enrichConfigsWithRegion();
+            applyRegionFilter();
+            document.getElementById('lastUpdate').innerHTML = new Date().toLocaleTimeString('fa-IR');
+            showToast(`✅ دریافت کامل شد. ${allConfigs.length} کانفیگ یکتا.`);
+        }
+
+        function extractConfigsFromText(raw) {
+            let configs = new Set();
+            if (!raw) return [];
+            let content = raw;
+            if (/^[A-Za-z0-9+/=]+$/.test(content.trim()) && content.length % 4 === 0) {
+                try { const d = atob(content); if (d.includes('://')) content = d; } catch(e) {}
+            }
+            const patterns = [
+                /(vless|vmess|trojan|ss|ssr):\/\/[^\s]+/gi,
+                /(VLESS|VMESS|TROJAN|SS|SSR):\/\/[^\s]+/gi,
+                /vmess:\/\/[A-Za-z0-9+/=]+/gi,
+                /vless:\/\/[A-Za-z0-9+/=@:.-]+/gi,
+                /trojan:\/\/[A-Za-z0-9+/=@:.-]+/gi
+            ];
+            for (const p of patterns) {
+                const matches = content.match(p);
+                if (matches) matches.forEach(m => configs.add(m.toLowerCase()));
+            }
+            const lines = content.split(/\r?\n/);
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.includes('://') && (trimmed.includes('@') || trimmed.includes('?'))) configs.add(trimmed);
+            }
+            return Array.from(configs);
+        }
+
+        function collectAllConfigs() {
+            let combined = [];
+            for (const src of SOURCES) {
+                if (rawContents[src.id]) {
+                    const extracted = extractConfigsFromText(rawContents[src.id]);
+                    combined.push(...extracted);
+                }
+            }
+            allConfigs = [...new Set(combined)].map(cfg => ({ config: cfg, region: 'Unknown' }));
+            updateStats();
+            return allConfigs;
+        }
+
+        // region mapping
+        async function getRegionFromIP(ip) {
+            try {
+                const res = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const code = data.countryCode;
+                    if (code === 'US') return 'America';
+                    if (code === 'CA') return 'Canada';
+                    if (code === 'AU') return 'Australia';
+                    if (['BR','AR','CL','CO','PE','VE','BO','PY','UY','EC','SR','GY','GF'].includes(code)) return 'SouthAmerica';
+                    if (['GB','DE','FR','IT','ES','NL','RU','UA','PL','SE','NO','DK','FI','CH','AT','BE','PT','GR','CZ','HU','RO','IE','SK','BG','HR','LT','LV','EE','IS','LU','MT','SI'].includes(code)) return 'Europe';
+                    if (['CN','JP','KR','IN','ID','MY','SG','TH','VN','PH','PK','BD','LK','NP','KH','LA','MM','TW','HK','MO'].includes(code)) return 'Asia';
+                    return 'Other';
+                }
+            } catch(e) {}
+            return 'Unknown';
+        }
+
+        function extractIPFromConfig(config) {
+            try {
+                if (config.startsWith('vless://')) {
+                    const match = config.match(/vless:\/\/(?:[^@]+@)?([^:]+)/);
+                    return match ? match[1] : null;
+                } else if (config.startsWith('vmess://')) {
+                    const b64 = config.replace('vmess://', '');
+                    const decoded = atob(b64);
+                    const obj = JSON.parse(decoded);
+                    return obj.add || null;
+                } else if (config.startsWith('trojan://')) {
+                    const match = config.match(/trojan:\/\/(?:[^@]+@)?([^:]+)/);
+                    return match ? match[1] : null;
+                } else if (config.startsWith('ss://')) {
+                    const match = config.match(/ss:\/\/[^@]+@([^:]+)/);
+                    return match ? match[1] : null;
+                }
+            } catch(e) { return null; }
+            return null;
+        }
+
+        async function enrichConfigsWithRegion() {
+            for (let i = 0; i < allConfigs.length; i++) {
+                const ip = extractIPFromConfig(allConfigs[i].config);
+                if (ip) {
+                    const region = await getRegionFromIP(ip);
+                    allConfigs[i].region = region;
+                }
+                if (i % 10 === 0) await new Promise(r => setTimeout(r, 50));
+            }
+        }
+
+        function applyRegionFilter() {
+            const checkboxes = document.querySelectorAll('.region-chk');
+            const selectedRegions = [];
+            checkboxes.forEach(cb => { if (cb.checked) selectedRegions.push(cb.value); });
+            if (selectedRegions.length === 0) {
+                filteredConfigs = [...allConfigs];
+            } else {
+                filteredConfigs = allConfigs.filter(item => selectedRegions.includes(item.region));
+            }
+            document.getElementById('filteredCount').innerText = filteredConfigs.length;
+            tableDisplayedCount = 0;
+            document.getElementById('tableBody').innerHTML = '';
+            loadMoreTableRows();
+            setupTableScrollObserver();
+            vipResults = [];
+            currentVipList = [];
+            updateVipDisplay();
+        }
+
+        function loadMoreTableRows() {
+            const tbody = document.getElementById('tableBody');
+            const remaining = filteredConfigs.length - tableDisplayedCount;
+            const toAdd = Math.min(TABLE_BATCH, remaining);
+            if (toAdd <= 0) return;
+            for (let i = 0; i < toAdd; i++) {
+                const item = filteredConfigs[tableDisplayedCount + i];
+                const row = tbody.insertRow();
+                row.insertCell(0).innerText = tableDisplayedCount + i + 1;
+                const cfgCell = row.insertCell(1);
+                cfgCell.className = 'config-cell';
+                cfgCell.innerText = item.config;
+                row.insertCell(2).innerText = item.region;
+                const actionCell = row.insertCell(3);
+                const copyBtn = document.createElement('button');
+                copyBtn.innerText = '📋 کپی';
+                copyBtn.className = 'small-btn';
+                copyBtn.onclick = () => copyToClipboard(item.config, `✅ کانفیگ ${tableDisplayedCount+i+1} کپی شد`);
+                actionCell.appendChild(copyBtn);
+            }
+            tableDisplayedCount += toAdd;
+            if (tableDisplayedCount >= filteredConfigs.length && tableScrollObserver) tableScrollObserver.disconnect();
+        }
+
+        function setupTableScrollObserver() {
+            const container = document.getElementById('tableScrollContainer');
+            if (tableScrollObserver) tableScrollObserver.disconnect();
+            const oldSentinel = document.getElementById('tableSentinel');
+            if (oldSentinel) oldSentinel.remove();
+            const sentinel = document.createElement('div');
+            sentinel.id = 'tableSentinel';
+            sentinel.style.height = '10px';
+            container.appendChild(sentinel);
+            tableScrollObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && tableDisplayedCount < filteredConfigs.length) loadMoreTableRows();
+            }, { root: container, threshold: 0.1 });
+            tableScrollObserver.observe(sentinel);
+        }
+
+        async function pingHost(host, timeout = 5000) {
+            const protocols = ['https://', 'http://'];
+            for (const protocol of protocols) {
+                const url = `${protocol}${host}`;
+                const start = Date.now();
+                const controller = new AbortController();
+                const tid = setTimeout(() => controller.abort(), timeout);
+                try {
+                    const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
+                    clearTimeout(tid);
+                    if (res.ok) return Date.now() - start;
+                } catch(e) {}
+            }
+            return null;
+        }
+
+        async function applyVipFilter() {
+            if (filteredConfigs.length === 0) {
+                showToast("هیچ کانفیگی پس از فیلتر منطقه وجود ندارد. ابتدا منابع را دریافت و فیلتر منطقه را اعمال کنید.", true);
+                return;
+            }
+
+            const minPing = parseInt(document.getElementById('minPingVip').value) || 0;
+            const maxPing = parseInt(document.getElementById('maxPingVip').value) || 9999;
+            const topCount = parseInt(document.getElementById('topCountVip').value) || 200;
+            const delay = parseInt(document.getElementById('delayVip').value) || 200;
+
+            showToast(`🔍 در حال تست پینگ ${filteredConfigs.length} کانفیگ با تأخیر ${delay}ms... این فرآیند ممکن است چند دقیقه طول بکشد.`);
+            
+            const results = [];
+            const total = filteredConfigs.length;
+            for (let i = 0; i < total; i++) {
+                const ip = extractIPFromConfig(filteredConfigs[i].config);
+                if (ip) {
+                    const ping = await pingHost(ip);
+                    if (ping !== null && ping >= minPing && ping <= maxPing) {
+                        results.push({ config: filteredConfigs[i].config, ping, region: filteredConfigs[i].region });
+                    }
+                }
+                if ((i+1) % 20 === 0) showToast(`تست پینگ: ${i+1}/${total} انجام شد...`);
+                if (delay > 0) await new Promise(r => setTimeout(r, delay));
+            }
+            
+            results.sort((a,b) => a.ping - b.ping);
+            const topResults = results.slice(0, topCount);
+            vipResults = topResults;
+            currentVipList = [...vipResults];
+            updateStats();
+            updateVipDisplay();
+            showToast(`✅ تست پینگ کامل شد. ${vipResults.length} کانفیگ VIP یافت شد (از ${total} کانفیگ).`);
+        }
+
+        function updateVipDisplay() {
+            const total = currentVipList.length;
+            document.getElementById('vipTotalBadge').innerText = `تعداد کل VIP: ${total}`;
+            vipDisplayedCount = 0;
+            const container = document.getElementById('vipListInner');
+            container.innerHTML = '';
+            if (total === 0) {
+                container.innerHTML = '<p style="text-align:center;">هیچ کانفیگ VIP با شرایط فعلی یافت نشد.</p>';
+                document.getElementById('loadMoreVipBtn').style.display = 'none';
+                document.getElementById('vipLoadedBadge').innerText = 'نمایش داده شده: 0';
+                return;
+            }
+            loadMoreVipRows();
+            const loadMoreBtn = document.getElementById('loadMoreVipBtn');
+            if (total > VIP_BATCH) loadMoreBtn.style.display = 'block';
+            else loadMoreBtn.style.display = 'none';
+        }
+
+        function loadMoreVipRows() {
+            const total = currentVipList.length;
+            const remaining = total - vipDisplayedCount;
+            const toAdd = Math.min(VIP_BATCH, remaining);
+            if (toAdd <= 0) return;
+            const container = document.getElementById('vipListInner');
+            for (let i = 0; i < toAdd; i++) {
+                const item = currentVipList[vipDisplayedCount + i];
+                const div = document.createElement('div');
+                div.className = 'vip-item';
+                div.innerHTML = `
+                    <div class="vip-ping">🏓 ${item.ping} ms</div>
+                    <div class="vip-config">${item.config}</div>
+                    <button class="small-btn copy-single-vip" data-config="${item.config.replace(/"/g, '&quot;')}">📋 کپی</button>
+                `;
+                container.appendChild(div);
+            }
+            vipDisplayedCount += toAdd;
+            document.querySelectorAll('.copy-single-vip').forEach(btn => {
+                btn.removeEventListener('click', copySingleVipHandler);
+                btn.addEventListener('click', copySingleVipHandler);
+            });
+            document.getElementById('vipLoadedBadge').innerText = `نمایش داده شده: ${vipDisplayedCount}`;
+            const loadMoreBtn = document.getElementById('loadMoreVipBtn');
+            if (vipDisplayedCount >= total) loadMoreBtn.style.display = 'none';
+            else loadMoreBtn.style.display = 'block';
+        }
+
+        function copySingleVipHandler(e) {
+            const config = e.currentTarget.getAttribute('data-config');
+            copyToClipboard(config, '✅ کانفیگ VIP کپی شد');
+        }
+
+        function loadMoreVip() { loadMoreVipRows(); }
+
+        async function copyToClipboard(text, msg) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast(msg);
+            } catch(e) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast(msg);
+            }
+        }
+
+        // توابع مخصوص اهدا به مهسا
+        function getSubscriptionLink() {
+            if (filteredConfigs.length === 0) {
+                showToast("هیچ کانفیگی برای ساخت لینک وجود ندارد. ابتدا دریافت و فیلتر منطقه را اعمال کنید.", true);
+                return null;
+            }
+            const content = filteredConfigs.map(i => i.config).join('\n');
+            let base64;
+            try {
+                base64 = btoa(unescape(encodeURIComponent(content)));
+            } catch(e) {
+                base64 = btoa(content);
+            }
+            return `data:text/plain;base64,${base64}`;
+        }
+
+        function copySubscriptionForMahsa() {
+            const link = getSubscriptionLink();
+            if (link) {
+                copyToClipboard(link, "✅ لینک سابسکریپشن کپی شد. حالا در مهسا: ➕ → Import from URL → چسباندن لینک");
+            }
+        }
+
+        function copyVipForMahsa() {
+            if (currentVipList.length === 0) {
+                showToast("لیست VIP خالی است. ابتدا فیلتر VIP را اعمال کنید.", true);
+                return;
+            }
+            const text = currentVipList.map(i => i.config).join('\n');
+            copyToClipboard(text, `✅ ${currentVipList.length} کانفیگ VIP کپی شد. در مهسا: ➕ → Import from Clipboard`);
+        }
+
+        function copyAllFilteredConfigs() {
+            if (!filteredConfigs.length) { showToast("هیچ کانفیگی وجود ندارد", true); return; }
+            const text = filteredConfigs.map(i => i.config).join('\n');
+            copyToClipboard(text, `✅ ${filteredConfigs.length} کانفیگ کپی شد`);
+        }
+        function copyAllVip() {
+            if (!currentVipList.length) { showToast("هیچ VIP ای وجود ندارد", true); return; }
+            const text = currentVipList.map(i => i.config).join('\n');
+            copyToClipboard(text, `✅ ${currentVipList.length} کانفیگ VIP کپی شد`);
+        }
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+        function downloadTxt() {
+            if (!filteredConfigs.length) { showToast("هیچ داده‌ای برای دانلود نیست", true); return; }
+            downloadFile(filteredConfigs.map(i => i.config).join('\n'), `kashif11_all_${Date.now()}.txt`);
+            showToast("دانلود TXT شروع شد");
+        }
+        function downloadCsv() {
+            if (!filteredConfigs.length) return;
+            let csv = "Index,Config,Region\n";
+            filteredConfigs.forEach((item, idx) => { csv += `${idx+1},"${item.config.replace(/"/g, '""')}",${item.region}\n`; });
+            downloadFile(csv, `kashif11_all_${Date.now()}.csv`);
+            showToast("دانلود CSV شروع شد");
+        }
+        function downloadJson() {
+            if (!filteredConfigs.length) return;
+            const obj = { timestamp: Date.now(), count: filteredConfigs.length, configs: filteredConfigs };
+            downloadFile(JSON.stringify(obj, null, 2), `kashif11_all_${Date.now()}.json`);
+            showToast("دانلود JSON شروع شد");
+        }
+        function downloadVipFile() {
+            if (!currentVipList.length) { showToast("هیچ VIP ای برای دانلود نیست", true); return; }
+            downloadFile(currentVipList.map(i => `[${i.ping}ms] ${i.config}`).join('\n'), `kashif11_vip_${Date.now()}.txt`);
+            showToast("دانلود VIP شروع شد");
+        }
+
+        function renderSourcesList() {
+            const grid = document.getElementById('sourceGrid');
+            grid.innerHTML = '';
+            for (const src of SOURCES) {
+                const card = document.createElement('div');
+                card.className = 'source-card';
+                card.innerHTML = `
+                    <input type="checkbox" id="chk_${src.id}" checked>
+                    <div class="source-info">
+                        <div class="source-name">${src.name}</div>
+                        <div class="source-url">${src.url.substring(0,70)}${src.url.length>70?'...':''}</div>
+                        <div class="source-status" id="status_${src.id}">⏳ دریافت نشده</div>
+                        <div class="source-count" id="count_${src.id}" style="font-size:0.7rem; color:#94a3b8;"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+        function selectAll() { SOURCES.forEach(s => { let cb = document.getElementById(`chk_${s.id}`); if(cb) cb.checked=true; }); showToast("همه منابع انتخاب شدند."); }
+        function deselectAll() { SOURCES.forEach(s => { let cb = document.getElementById(`chk_${s.id}`); if(cb) cb.checked=false; }); showToast("انتخاب همه لغو شد."); }
+        function clearAllData() {
+            if(confirm("تمام داده‌ها پاک می‌شوند. ادامه؟")){
+                rawContents={}; allConfigs=[]; filteredConfigs=[]; vipResults=[]; currentVipList=[];
+                tableDisplayedCount=0; vipDisplayedCount=0;
+                document.getElementById('tableBody').innerHTML='<tr><td colspan="4">هیچ کانفیگی وجود ندارد<\/td><\/tr>';
+                document.getElementById('vipListInner').innerHTML='<p style="text-align:center;">تنظیمات را انتخاب کرده و روی «اعمال فیلتر VIP» کلیک کنید...</p>';
+                document.getElementById('filteredCount').innerText='0';
+                document.getElementById('vipTotalBadge').innerText='تعداد کل VIP: 0';
+                document.getElementById('vipLoadedBadge').innerText='نمایش داده شده: 0';
+                updateStats();
+                for(const src of SOURCES){
+                    let st=document.getElementById(`status_${src.id}`); if(st){st.innerHTML="⏳ دریافت نشده"; st.className="";}
+                    let cnt=document.getElementById(`count_${src.id}`); if(cnt) cnt.innerText="";
+                }
+                if(tableScrollObserver) tableScrollObserver.disconnect();
+                showToast("همه داده‌ها پاک شد.");
+            }
+        }
+
+        document.getElementById('fetchSelectedBtn').addEventListener('click', fetchSelectedSources);
+        document.getElementById('selectAllBtn').addEventListener('click', selectAll);
+        document.getElementById('deselectAllBtn').addEventListener('click', deselectAll);
+        document.getElementById('applyRegionBtn').addEventListener('click', applyRegionFilter);
+        document.getElementById('clearAllBtn').addEventListener('click', clearAllData);
+        document.getElementById('copyAllTableBtn').addEventListener('click', copyAllFilteredConfigs);
+        document.getElementById('copyVipBtn').addEventListener('click', copyAllVip);
+        document.getElementById('downloadTxtBtn').addEventListener('click', downloadTxt);
+        document.getElementById('downloadCsvBtn').addEventListener('click', downloadCsv);
+        document.getElementById('downloadJsonBtn').addEventListener('click', downloadJson);
+        document.getElementById('downloadVipBtn').addEventListener('click', downloadVipFile);
+        document.getElementById('applyVipFilterBtn').addEventListener('click', applyVipFilter);
+        document.getElementById('loadMoreVipBtn').addEventListener('click', loadMoreVip);
+        document.getElementById('copySubscriptionForMahsa').addEventListener('click', copySubscriptionForMahsa);
+        document.getElementById('copyVipForMahsa').addEventListener('click', copyVipForMahsa);
+
+        renderSourcesList();
+        showToast("کاشف 11 آماده است. کانفیگ‌ها را دریافت کنید، سپس با دکمه‌های قرمز به مهسا اهدا کنید.");
+    })();
+</script>
+</body>
+</html>
